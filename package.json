@@ -1,12 +1,16 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.7.2",
+=======
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.3",
+<<<<<<< HEAD
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.0",
     "socket.io": "^4.7.5",
@@ -31,5 +35,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+=======
+    "socket.io": "^4.7.5"
+  },
+  "scripts": {
+    "start": "nodemon your-app.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   }
 }

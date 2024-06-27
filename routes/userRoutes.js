@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const authenticateToken = require("../controller/authController");
 const Item = require("../models/itemModel");
+<<<<<<< HEAD
 const app=express();
 const cors=require('cors')
 dotenv.config();
@@ -18,6 +19,15 @@ const jwtSecret = process.env.JWT_SECRET;
 Router.post("/register", async (req, res) => {
   const { email, name, phone, password, address, role } = req.body;
 
+=======
+dotenv.config();
+
+const jwtSecret = process.env.JWT_SECRET;
+
+//registeration of a new user
+Router.post("/register", async (req, res) => {
+  const { email, name, phone, password, address, role, cart } = req.body;
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   try {
     const existing = await User.findOne({ email });
     if (existing) {
@@ -27,6 +37,7 @@ Router.post("/register", async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+<<<<<<< HEAD
     // Define a default cart structure
     const defaultCart = {
       individualCarts: [], // You can initialize with empty individual carts
@@ -35,6 +46,8 @@ Router.post("/register", async (req, res) => {
     };
 
     // Create a new User instance with default cart
+=======
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
     const newUser = new User({
       name,
       email,
@@ -42,12 +55,31 @@ Router.post("/register", async (req, res) => {
       password: hashedPassword,
       address,
       role,
+<<<<<<< HEAD
       Collections: [defaultCart], // Assign default cart to Collections array
       associatedUsers: [] // Initialize with no associated users
     });
 
     await newUser.save();
     return res.status(201).json({ message: "User created successfully", user: newUser });
+=======
+      cart,
+    });
+
+    const payload = {
+      id: newUser._id,
+      email: newUser.email,
+      name: newUser.name,
+      role: newUser.role,
+    };
+
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
+
+    await newUser.save();
+    return res
+      .status(201)
+      .json({ message: "User created successfully", token, user: newUser });
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -55,9 +87,22 @@ Router.post("/register", async (req, res) => {
 
 //login by user
 Router.post("/login", async (req, res) => {
+<<<<<<< HEAD
   const { email, password } = req.body;
   try {
   
+=======
+  const { email, password, token } = req.body;
+  try {
+    if (!token) {
+      return res.status(400).json({ message: "Token is required" });
+    }
+
+    jwt.verify(token, jwtSecret, async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Invalid token" });
+      }
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
 
       const existing = await User.findOne({ email });
       if (!existing) {
@@ -81,7 +126,11 @@ Router.post("/login", async (req, res) => {
       return res
         .status(200)
         .json({ message: "Login successful", token: newToken, user: existing });
+<<<<<<< HEAD
     
+=======
+    });
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -89,7 +138,11 @@ Router.post("/login", async (req, res) => {
 
 
 //get user info
+<<<<<<< HEAD
 Router.get("/getUser/:userId",async (req, res) => {
+=======
+Router.get("/getUser/:userId", async (req, res) => {
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const userId = req.params.userId;
 
   try {
@@ -108,7 +161,11 @@ Router.get("/getUser/:userId",async (req, res) => {
 
 
 //update user details
+<<<<<<< HEAD
 Router.put("/updateDetails",authenticateToken, async (req, res) => {
+=======
+Router.put("/updateDetails", async (req, res) => {
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const { email, name, phone, password, address, role, cart } = req.body;
   try {
     const updatedUser = await User.findOneAndUpdate(
@@ -131,7 +188,11 @@ Router.put("/updateDetails",authenticateToken, async (req, res) => {
 });
 
 //delete user
+<<<<<<< HEAD
 Router.delete("/deleteUser", authenticateToken,async (req, res) => {
+=======
+Router.delete("/deleteUser", async (req, res) => {
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const { email } = req.body;
   try {
     const existing = await User.findOne({ email });
@@ -147,7 +208,11 @@ Router.delete("/deleteUser", authenticateToken,async (req, res) => {
 });
 
 //for adding multiple wishlists to the account
+<<<<<<< HEAD
 Router.post("/addWishlists/:id", authenticateToken,async (req, res) => {
+=======
+Router.post("/addWishlists/:id", async (req, res) => {
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const { id } = req.params;
   const existingUser = await User.findById(id);
   if (!existingUser) {
@@ -431,6 +496,7 @@ console.log(sharedCart);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+<<<<<<< HEAD
 Router.get('/cart/:cartId', async (req, res) => {
   const { cartId } = req.params;
 
@@ -468,5 +534,7 @@ Router.get('/cart/:cartId', async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
 
 module.exports = Router;

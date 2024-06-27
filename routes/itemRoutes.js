@@ -34,6 +34,7 @@ Router.get('/getItem', async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 });
+<<<<<<< HEAD
 Router.get('/getItems', async (req, res) => {
     try {
         const items = await Item.find();
@@ -43,6 +44,9 @@ Router.get('/getItems', async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 });
+=======
+
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
 Router.delete('/deleteItem', async (req, res) => {
     try {
         const title = req.body.title;

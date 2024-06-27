@@ -6,11 +6,17 @@ const itemRoutes=require('./routes/itemRoutes')
 const userRoutes=require('./routes/userRoutes')
 
 
+<<<<<<< HEAD
 
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
+=======
+require('dotenv').config();
+
+const app = express();
+>>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
 
 // Middleware
 app.use(cors());    
