@@ -2,30 +2,22 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const itemRoutes=require('./routes/itemRoutes')
-const userRoutes=require('./routes/userRoutes')
+const itemRoutes=require('./routes/itemRoute')
+const userRoutes=require('./routes/userRoute')
 
 
-<<<<<<< HEAD
+
 
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
-=======
-require('dotenv').config();
-
-const app = express();
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
-
 // Middleware
 app.use(cors());    
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/item',itemRoutes);
 app.use('/user',userRoutes);
-
-
 
 
 // MongoDB connection and server start

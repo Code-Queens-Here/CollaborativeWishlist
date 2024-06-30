@@ -2,7 +2,15 @@ const Express = require('express');
 const mongoose = require('mongoose');
 const Router = Express.Router();
 const Item = require('../models/itemModel');
-
+Router.get('/getItems', async (req, res) => {
+    try {
+        const items = await Item.find();
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json({ items });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+});
 Router.post('/postItem', async (req, res) => {
     try {
         const { title, content, price, picture } = req.body;
@@ -34,19 +42,6 @@ Router.get('/getItem', async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 });
-<<<<<<< HEAD
-Router.get('/getItems', async (req, res) => {
-    try {
-        const items = await Item.find();
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json({ items });
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
-    }
-});
-=======
-
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
 Router.delete('/deleteItem', async (req, res) => {
     try {
         const title = req.body.title;

@@ -21,6 +21,11 @@ const cartSchema = new mongoose.Schema(
 const Carts=new mongoose.Schema({
  
   individualCarts:[cartSchema],
+  name:{
+    type:String,
+    required:true,
+    default:'Cart'
+  },
   sharedWith:[
     {
       type:mongoose.Schema.Types.ObjectId,

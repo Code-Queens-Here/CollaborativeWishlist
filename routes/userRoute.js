@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const authenticateToken = require("../controller/authController");
 const Item = require("../models/itemModel");
-<<<<<<< HEAD
+
 const app=express();
 const cors=require('cors')
 dotenv.config();
@@ -15,19 +15,12 @@ dotenv.config();
 app.use(cors());
 const jwtSecret = process.env.JWT_SECRET;
 // Router.use(bodyParser.json());
-//registeration of a new user
-Router.post("/register", async (req, res) => {
-  const { email, name, phone, password, address, role } = req.body;
-
-=======
 dotenv.config();
-
-const jwtSecret = process.env.JWT_SECRET;
 
 //registeration of a new user
 Router.post("/register", async (req, res) => {
   const { email, name, phone, password, address, role, cart } = req.body;
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
+
   try {
     const existing = await User.findOne({ email });
     if (existing) {
@@ -37,17 +30,16 @@ Router.post("/register", async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-<<<<<<< HEAD
     // Define a default cart structure
     const defaultCart = {
       individualCarts: [], // You can initialize with empty individual carts
       sharedWith: [], // Initialize with no shared users
-      cartType: 'Private' // Default cart type
+      cartType: 'Private', // Default cart type
+      name:'Default cart'
     };
 
     // Create a new User instance with default cart
-=======
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
+
     const newUser = new User({
       name,
       email,
@@ -55,31 +47,12 @@ Router.post("/register", async (req, res) => {
       password: hashedPassword,
       address,
       role,
-<<<<<<< HEAD
       Collections: [defaultCart], // Assign default cart to Collections array
       associatedUsers: [] // Initialize with no associated users
     });
 
     await newUser.save();
     return res.status(201).json({ message: "User created successfully", user: newUser });
-=======
-      cart,
-    });
-
-    const payload = {
-      id: newUser._id,
-      email: newUser.email,
-      name: newUser.name,
-      role: newUser.role,
-    };
-
-    const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
-
-    await newUser.save();
-    return res
-      .status(201)
-      .json({ message: "User created successfully", token, user: newUser });
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -87,22 +60,9 @@ Router.post("/register", async (req, res) => {
 
 //login by user
 Router.post("/login", async (req, res) => {
-<<<<<<< HEAD
   const { email, password } = req.body;
   try {
   
-=======
-  const { email, password, token } = req.body;
-  try {
-    if (!token) {
-      return res.status(400).json({ message: "Token is required" });
-    }
-
-    jwt.verify(token, jwtSecret, async (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ message: "Invalid token" });
-      }
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
 
       const existing = await User.findOne({ email });
       if (!existing) {
@@ -126,11 +86,7 @@ Router.post("/login", async (req, res) => {
       return res
         .status(200)
         .json({ message: "Login successful", token: newToken, user: existing });
-<<<<<<< HEAD
     
-=======
-    });
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -138,11 +94,7 @@ Router.post("/login", async (req, res) => {
 
 
 //get user info
-<<<<<<< HEAD
 Router.get("/getUser/:userId",async (req, res) => {
-=======
-Router.get("/getUser/:userId", async (req, res) => {
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const userId = req.params.userId;
 
   try {
@@ -161,11 +113,7 @@ Router.get("/getUser/:userId", async (req, res) => {
 
 
 //update user details
-<<<<<<< HEAD
 Router.put("/updateDetails",authenticateToken, async (req, res) => {
-=======
-Router.put("/updateDetails", async (req, res) => {
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const { email, name, phone, password, address, role, cart } = req.body;
   try {
     const updatedUser = await User.findOneAndUpdate(
@@ -188,11 +136,7 @@ Router.put("/updateDetails", async (req, res) => {
 });
 
 //delete user
-<<<<<<< HEAD
 Router.delete("/deleteUser", authenticateToken,async (req, res) => {
-=======
-Router.delete("/deleteUser", async (req, res) => {
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
   const { email } = req.body;
   try {
     const existing = await User.findOne({ email });
@@ -208,26 +152,31 @@ Router.delete("/deleteUser", async (req, res) => {
 });
 
 //for adding multiple wishlists to the account
-<<<<<<< HEAD
-Router.post("/addWishlists/:id", authenticateToken,async (req, res) => {
-=======
 Router.post("/addWishlists/:id", async (req, res) => {
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
-  const { id } = req.params;
-  const existingUser = await User.findById(id);
-  if (!existingUser) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const { id } = req.params;
+    // if (!id.isValid(id.trim())) {
+    //   return res.status(400).json({ message: "Invalid user ID format" });
+    // }
+
+    const existingUser = await User.findById(id.trim());
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Assuming you want to add a new cart object to the Collections array
+    const newCart = {}; // Define your cart structure here
+    existingUser.Collections.push(newCart);
+
+    await existingUser.save();
+    return res.status(200).json({
+      message: "Cart created successfully",
+      collections: existingUser.Collections,
+    });
+  } catch (error) {
+    console.error('Error adding to wishlist:', error);
+    res.status(500).json({ message: "An error occurred while adding to the wishlist" });
   }
-
-  // Assuming you want to add a new cart object to the Collections array
-  const newCart = {}; // Define your cart structure here
-  existingUser.Collections.push(newCart);
-
-  await existingUser.save();
-  return res.status(200).json({
-    message: "Cart created successfully",
-    collections: existingUser.Collections,
-  });
 });
 
 //deleting any wihslist 
@@ -369,6 +318,7 @@ Router.post("/addUsers/:existingUserId/:cartId", async (req, res) => {
     }
 
     // Find friend user by email
+    
     const friendUser = await User.findOne({ email });
     if (!friendUser) {
       return res.status(404).json({ message: "Friend user not found" });
@@ -415,8 +365,16 @@ Router.post("/addUsers/:existingUserId/:cartId", async (req, res) => {
 });
 
 //deleting any user from the wishlist
+
 Router.delete("/deleteUserFromCart/:existingUserId/:cartId/:userIdToDelete", async (req, res) => {
   const { existingUserId, cartId, userIdToDelete } = req.params;
+
+  // Validate ObjectIDs
+  if (!mongoose.Types.ObjectId.isValid(existingUserId) ||
+      !mongoose.Types.ObjectId.isValid(cartId) ||
+      !mongoose.Types.ObjectId.isValid(userIdToDelete)) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
 
   try {
     // Find existing user by ID
@@ -434,9 +392,15 @@ Router.delete("/deleteUserFromCart/:existingUserId/:cartId/:userIdToDelete", asy
     }
 
     // Remove userIdToDelete from sharedWith array in the cart
+    const initialLength = cartToUpdate.sharedWith.length;
     cartToUpdate.sharedWith = cartToUpdate.sharedWith.filter(
       (userId) => userId.toString() !== userIdToDelete
     );
+
+    // Check if any user was actually removed
+    if (cartToUpdate.sharedWith.length === initialLength) {
+      return res.status(404).json({ message: "User to delete not found in cart" });
+    }
 
     // Save the updated user document
     await existingUser.save();
@@ -447,7 +411,7 @@ Router.delete("/deleteUserFromCart/:existingUserId/:cartId/:userIdToDelete", asy
     });
   } catch (error) {
     console.error("Error deleting user from cart:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
 
@@ -496,7 +460,6 @@ console.log(sharedCart);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-<<<<<<< HEAD
 Router.get('/cart/:cartId', async (req, res) => {
   const { cartId } = req.params;
 
@@ -534,7 +497,196 @@ Router.get('/cart/:cartId', async (req, res) => {
   }
 });
 
-=======
->>>>>>> 4b9e01dc6392405aee0ddd524356c8905d5385cb
+//remove item from cart 
+Router.delete('/removeItemFromCart/:userId/:cartId/:itemId', async (req, res) => {
+  const { userId, cartId, itemId } = req.params;
 
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find the specific cart in the user's Collections
+    const cart = user.Collections.id(cartId);
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    // Find the item in the cart's individualCarts array
+    const itemIndex = cart.individualCarts.findIndex(cartItem => cartItem.itemId.toString() === itemId);
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: "Item not found in cart" });
+    }
+
+    // Remove the item from the cart
+    cart.individualCarts.splice(itemIndex, 1);
+
+    // Save the updated user document
+    await user.save();
+
+    res.status(200).json({ message: "Item removed from cart successfully", cart });
+  } catch (error) {
+    console.error('Error removing item from cart:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+//view user's all carts
+Router.get('/getAllCarts/:userId', async (req, res) => {
+  const { userId } = req.params;
+  
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const carts = user.Collections.map(cart => ({
+      cartId: cart._id,
+      name: cart.name
+    }));
+
+    return res.status(200).json({ message: 'Carts retrieved successfully', carts });
+  } catch (error) {
+    console.error('Error fetching carts:', error);
+    return res.status(500).json({ message: 'Error fetching carts', error });
+  }
+});
+
+
+Router.get('/getAssociatedUsers/:userId/:cartId', async (req, res) => {
+  try {
+    const { userId, cartId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const cart = user.Collections.id(cartId);
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    const sharedWithIds = cart.sharedWith;
+
+    // Fetch user details for each ID in sharedWith
+    const friends = await User.find({ _id: { $in: sharedWithIds } }).select('id name');
+    const friendData = friends.map(friend => ({ id: friend._id, name: friend.name }));
+
+    return res.json({ message: 'Cart sent successfully', friends: friendData });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+Router.post('/addItemsToFriendsWishlist/:userId/:friendId/:cartId', async (req, res) => {
+  const { userId, friendId, cartId } = req.params;
+  const { itemId,quantity } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+    if (!user || !friend) {
+      return res.status(404).json({ message: 'User or friend not found' });
+    }
+
+    const cart = user.Collections.id(cartId);
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    const findFriendInCart = cart.sharedWith.findIndex(friend => friend._id.toString() === friendId);
+    if (findFriendInCart === -1) {
+      return res.status(404).json({ message: 'Friend not associated with the user' });
+    }
+
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    cart.items.push(item);
+    await user.save();
+
+    return res.status(200).json({ message: 'Item added successfully', cart: cart });
+  } catch (error) {
+    return res.status(500).json({ message: 'An error occurred', error: error.message });
+  }
+});
+
+Router.get('/cartsSharedWithUser/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Check if sharedCarts is defined and is an array
+    if (!user.sharedCarts || !Array.isArray(user.sharedCarts)) {
+      return res.status(200).json({ message: 'No shared carts found', carts: [] });
+    }
+
+    const sharedCarts = user.sharedCarts.map(cart => ({
+      id: cart._id,
+      name: cart.name,
+      items: cart.items, // if needed
+    }));
+    
+    return res.status(200).json({ carts: sharedCarts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+Router.get('/getFriendsId/:userId/:cartId', async (req, res) => {
+  const { userId, cartId } = req.params;
+
+  try {
+    // Find the user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    // Find the user who owns the cart with the given cartId and check if it's shared with the given userId
+    const owner = await User.findOne({
+      'Collections._id': cartId,
+      'Collections.sharedWith': { $elemMatch: { _id: userId } }
+    });
+
+    if (!owner) {
+      return res.status(404).json({ message: 'No user found with the specified cart shared with the given user' });
+    }
+
+    return res.status(200).json({ message: 'User found', friend: owner._id });
+  } catch (error) {
+    return res.status(500).json({ message: 'An error occurred', error: error.message });
+  }
+});
+Router.get('/myAllWishlists/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!user.Collections || !Array.isArray(user.Collections)) {
+      return res.status(200).json({ message: 'No collections found', data: [] });
+    }
+
+    const data = user.Collections.map(element => ({
+      id: element._id,
+      name: element.name
+    }));
+
+    return res.status(200).json({ message: 'Data sent', data: data });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 module.exports = Router;

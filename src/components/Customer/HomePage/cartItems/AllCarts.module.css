@@ -1,0 +1,75 @@
+/* .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+   */
+  .cartList {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    margin-top: 10px;
+    margin-left: 20px;
+    border-color: #4CAF50;
+  }
+  
+  .cartItem {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .btn{
+      background-color: #4CAF50;
+    padding: 10px;
+/* margin-left: 90%; */
+  }
+
+  .button{
+    background-color: #4CAF50;
+    padding: 10px;
+    /* margin-left: 80%; */
+  }
+  .btnContainer{
+    display: flex;
+    gap: 10px;
+  }
+  .friendsListContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+  }
+  
+  .friendsList {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .closeButton {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .deleteButton {
+    margin-left: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .list{
+    margin-top: 30px;
+  }

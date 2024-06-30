@@ -1,0 +1,45 @@
+/* CartModal.css */
+
+.ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+}
+
+.ReactModal__Content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 8px;
+    outline: none;
+    z-index: 1001;
+}
+
+.cart-option {
+    margin-bottom: 15px;
+}
+
+.cart-option p {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
